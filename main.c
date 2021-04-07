@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/07 13:33:11 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/04/07 15:32:33 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/04/07 16:11:22 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,21 @@ int		test_ft_strlen(char *src)
 	printf("strlen			:%d\n", res);
 	free(s);
 	s = NULL;
+	printf("\x1b[34mnull_test\033[m\n");
+	char *nl = "";
+	res = 0;
+	res = ft_strlen(nl);
+	printf("ft_strlen		:%d\n", res);
+	res = 0;
+	res = strlen(nl);
+	printf("strlen			:%d\n", res);
 	return (0);
 }
 
 int	main(int ac, char **argv)
 {
+	if (ac != 3)
+		return (-1);
 	if (!(strncmp(argv[1], "ft_strlen", 10)))
 	{
 		if (argv[2])
