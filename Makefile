@@ -5,7 +5,7 @@ SRCS = srcs/ft_strlen.s \
 
 OBJCS = $(SRCS:%.s=%.o)
 
-cc = gcc
+CC = gcc
 
 ARFLAGS = rcs
 
@@ -32,6 +32,6 @@ fclean: clean
 re: fclean all
 
 test:
-	$(CC) -L . -lasm main.c
+	$(CC) -g -L . -lasm main.c
 
 .PHONY: all clean fclean re test
