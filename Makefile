@@ -1,6 +1,7 @@
 NAME = libasm.a
 
-SRCS = srcs/ft_strlen.s
+SRCS = srcs/ft_strlen.s \
+	   srcs/ft_strcpy.s
 
 OBJCS = $(SRCS:%.s=%.o)
 
@@ -10,13 +11,17 @@ ARFLAGS = rcs
 
 RMFLAGS = -rf
 
+NA = nasm
+
+NAFLAGS = -fmacho64
+
 all: $(NAME)
+
+%.o:%.s
+	$(NA) $(NAFLAGS) $<
 
 $(NAME): $(OBJCS)
 	$(AR) $(ARFLAGS) $(NAME) $(OBJCS)
-
-$(OBJCS): 
-	nasm -fmacho64 $(SRCS)
 
 clean:
 	$(RM) $(RMFLAGS) $(OBJCS)
