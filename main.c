@@ -6,7 +6,7 @@
 /*   By: jnakahod <jnakahod@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/07 13:33:11 by jnakahod          #+#    #+#             */
-/*   Updated: 2021/04/12 11:24:17 by jnakahod         ###   ########.fr       */
+/*   Updated: 2021/04/12 18:07:34 by jnakahod         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,14 +137,14 @@ void	test_write(int fd, char *buf, size_t len)
 {
 	printf("------libc---------\n");
 	errno = 0;
-	printf("write\t\t");
+	printf("ft_write\t\t");
 	fflush(stdout);
 	ssize_t ret_libc = ft_write(fd, buf, len);
 	int	errno_libc = errno;
 	printf("\tlibc	: ret=%zd errno=%d\n", ret_libc, errno);
 	errno = 0;
 	printf("------libasm---------\n");
-	printf("ft_write\t");
+	printf("write\t");
 	fflush(stdout);
 	ssize_t ret_asm = write(fd, buf, len);
 	int	errno_asm = errno;
@@ -154,11 +154,71 @@ void	test_write(int fd, char *buf, size_t len)
 
 }
 
+void	test_read(char *path, int size)
+{
+	printf("--%s, size=%d--\n", path, size);
+	/*
+	 * *run libc
+	 */
+	int fd_libc = open(path, O_RDONLY);
+	char *buf_libc = calloc(sizeof(char), size + 1);
+	errno = 0;
+	ssize_t ret_libc = read(fd_libc, buf_libc, size);
+	if (ret_libc >= 0)
+		buf_libc[ret_libc] =  '\0';
+	int errno_libc = errno;
+	/*
+	 * *run libasm
+	 */
+	int fd_asm = open(path, O_RDONLY);
+	char *buf_asm = calloc(sizeof(char), size + 1);
+	errno = 0;
+	ssize_t ret_asm = ft_read(fd_asm, buf_asm, size);
+	if (ret_asm >= 0)
+		buf_asm[ret_asm] =  '\0';
+	int errno_asm = errno;
+	/*
+	 * *check
+	 */
+	printf("\nlibc\n");
+	printf("fd=%d\nbuf=%sret=%zd\nerrno=%d\n", fd_libc, buf_libc, ret_libc, errno_libc);
+	printf("\nlbasm\n");
+	printf("fd=%d\nbuf=%sret=%zd\nerrno=%d\n", fd_asm, buf_asm, ret_asm, errno_asm);
+	close(fd_libc);
+	free(buf_libc);
+	close(fd_asm);
+	free(buf_asm);
+}
+
+void	test_strdup(char *src)
+{
+	printf("--%s--\n", src);
+	/*
+	 * *run libc
+	 */
+	printf("libc\n");
+	char *dst_libc;
+	dst_libc = strdup(src);
+	printf("address=%p\nret=%s\n", dst_libc, dst_libc);
+	/*
+	 * *run libasm
+	 */
+	printf("libasm\n");
+	char *dst_asm;
+	dst_asm = strdup(src);
+	printf("address=%p\nret=%s\n", dst_asm, dst_asm);
+	free(dst_libc);
+	free(dst_asm);
+}
+
+
 
 int	main(int ac, char **argv)
 {
 	if (ac != 3 && ac != 2 && ac != 4)
 		return (-1);
+	char *c = "ab";
+	printf("size=%ld\n", sizeof(c));
 	if (!(strncmp(argv[1], "strlen", 7)))
 	{
 		if (argv[2])
@@ -194,6 +254,7 @@ int	main(int ac, char **argv)
 	else if (!(strncmp(argv[1], "write", 6)))
 	{
 		printf("\x1b[44m------ft_write------\033[m\n");
+		fflush(stdout);
 		test_write(1, "test", 4);
 		test_write(1, "test", 100);
 		test_write(1, "test", 0);
@@ -212,6 +273,25 @@ int	main(int ac, char **argv)
 		test_write(1, "123456789", -1);
 
 		close(fd);
+		return (0);
+	}
+	else if (!(strncmp(argv[1], "read", 5)))
+	{
+		printf("\x1b[44m------ft_read------\033[m\n");
+		test_read("test.txt", 10);
+		test_read("test.txt", 0);
+		test_read("test.txt", 100);
+		printf("\n~~~~~~~~error_case~~~~~~~~~~~~\n");
+		test_read("nothing.txt", 100);
+
+		return (0);
+	}
+	else if (!(strncmp(argv[1], "strdup", 7)))
+	{
+		printf("\x1b[44m------ft_strdup------\033[m\n");
+		test_strdup("test");
+		printf("\n~~~~~~~~error_case~~~~~~~~~~~~\n");
+
 		return (0);
 	}
 	else

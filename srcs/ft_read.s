@@ -1,13 +1,13 @@
 extern ___error
 
 section .text
-	global _ft_write
+	global _ft_read
 
-_ft_write:				;ssize_t write(int fd, const void *buf, size_t count)
+_ft_read:				;ssize_t read(int fd, void *buf, size_t nbytes)
 	push rbp
 	mov rbp, rsp		;rbp = rsp
 	push rbx			;var(rbx)
-	mov rax, 0x2000004	;write
+	mov rax, 0x2000003	;read
 	syscall
 	jc .err
 	jmp .end
@@ -17,10 +17,10 @@ _ft_write:				;ssize_t write(int fd, const void *buf, size_t count)
 	call ___error		;rax = errno memory address
 	pop rbx				;rbx = errno
 	mov [rax], rbx		;*(errno memory address) = errno
-	mov rax, -1			;rax = -1
+	mov rax, -1
 
 .end:
 	pop rbx
-	leave				;mov rsp, rbp 
+	leave				;mov rsp, rbp
 						;pop rbp
 	ret
