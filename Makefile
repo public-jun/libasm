@@ -1,7 +1,9 @@
 NAME = libasm.a
 
 SRCS = srcs/ft_strlen.s \
-	   srcs/ft_strcpy.s
+	   srcs/ft_strcpy.s \
+	   srcs/ft_strcmp.s	\
+	   srcs/ft_write.s
 
 OBJCS = $(SRCS:%.s=%.o)
 
